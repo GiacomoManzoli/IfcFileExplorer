@@ -1,16 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
-import Typography from "material-ui/Typography";
-import TextField from "material-ui/TextField";
-import Paper from "material-ui/Paper";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Chip from "@material-ui/core/Chip";
+import Icon from "@material-ui/core/Icon";
+import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
 
-import Icon from "material-ui/Icon";
-import Button from "material-ui/Button";
-
-import KeyValueTable from "../common/KeyValueTable";
+import SearchResultLine from "./SearchResultLine";
 
 const styles = theme => ({
     root: {
@@ -38,6 +43,9 @@ const styles = theme => ({
     iconSmall: {
         fontSize: 20,
     },
+    chip: {
+        margin: theme.spacing.unit,
+    },
 });
 
 class SearchPage extends React.Component {
@@ -51,6 +59,7 @@ class SearchPage extends React.Component {
         } else {
             this.state = {
                 searchQuery: "",
+                searchResults: [],
                 summary: [],
                 lines: [],
             };
@@ -63,9 +72,13 @@ class SearchPage extends React.Component {
     handleSearch() {
         const { searchQuery } = this.state;
         console.log(searchQuery);
+
+        const searchResults = this.ifcFile.searchGrouped(searchQuery, false);
+
         const summary = this.ifcFile.getSummary(true, searchQuery);
         const lines = this.ifcFile.search(searchQuery, true);
         this.setState({
+            searchResults,
             summary,
             lines,
         });
@@ -81,14 +94,16 @@ class SearchPage extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { searchQuery, summary, lines } = this.state;
+        const {
+            searchQuery, searchResults, summary, lines,
+        } = this.state;
         return (
             <div className={classes.root}>
                 <Typography variant="display1" gutterBottom>
                     Search
                 </Typography>
 
-                <Grid justify="center" className={classes.grid} container spacing={24}>
+                <Grid className={classes.grid} container spacing={24}>
                     <Grid item xs={12} sm={12}>
                         <Paper>
                             <TextField
@@ -113,6 +128,35 @@ class SearchPage extends React.Component {
                 </Grid>
 
                 <Grid className={classes.grid} container spacing={24}>
+                    <Grid item xs={12} sm={12}>
+                        {searchResults.map(result => (
+                            <ExpansionPanel key={result.entity}>
+                                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                    <Typography className={classes.heading}>
+                                        {result.entity}
+                                        <Chip
+                                            component="span"
+                                            className={classes.chip}
+                                            label={result.lines.length}
+                                        />
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails>
+                                    <List dense>
+                                        {result.lines.map(line => (
+                                            <SearchResultLine
+                                                key={line.address}
+                                                line={line.fileLine}
+                                                searchQuery={searchQuery}
+                                            />
+                                        ))}
+                                    </List>
+                                </ExpansionPanelDetails>
+                            </ExpansionPanel>
+                        ))}
+                    </Grid>
+                </Grid>
+                {/* <Grid className={classes.grid} container spacing={24}>
                     <Grid item xs={12} sm={6}>
                         <Paper className={classes.paper}>
                             <KeyValueTable
@@ -131,7 +175,7 @@ class SearchPage extends React.Component {
                             />
                         </Paper>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </div>
         );
     }

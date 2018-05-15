@@ -1,8 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Table, { TableBody, TableCell, TableHead, TableRow } from "material-ui/Table";
-import { withStyles } from "material-ui/styles";
-import { Typography } from "material-ui";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import { withStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core/";
 
 const styles = () => ({
     table: {

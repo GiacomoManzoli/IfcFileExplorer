@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, FormControl } from "material-ui";
-import { withStyles } from "material-ui";
-import Icon from "material-ui/Icon";
+import { Button, FormControl } from "@material-ui/core/";
+import { withStyles } from "@material-ui/core/styles";
+import Icon from "@material-ui/core/Icon";
 
 const styles = theme => ({
     root: {

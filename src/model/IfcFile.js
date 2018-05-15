@@ -167,7 +167,7 @@ export default class IfcFile {
     searchGrouped(searchQuery, orderByCount) {
         const lcSearchQuery = searchQuery.toLowerCase();
 
-        const searchResult = this.search(lcSearchQuery, true);
+        const searchResult = this.search(lcSearchQuery, false);
 
         const resultMap = new Map();
 
